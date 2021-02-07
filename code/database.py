@@ -1,6 +1,17 @@
 import sqlite3
 
 
+def delete_table(filename, db_name):
+    connection = sqlite3.Connection(filename)
+    cursor = connection.cursor()
+    cursor.execute('DROP TABLE IF EXISTS ' + db_name)
+    connection.commit()
+    connection.close()
+
+
+# taken from https://github.com/binary-machinery/secret_santa_backend/blob/main/common/database.py
+
+
 class DatabaseWrapper:
     def __init__(self, filename):
         self.filename = filename

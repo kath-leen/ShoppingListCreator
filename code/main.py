@@ -1,15 +1,7 @@
 import ingredients
 import recipes
 import recipes_ingredients
-import sqlite3
-
-
-def delete_table(filename, db_name):
-    connection = sqlite3.Connection(filename)
-    cursor = connection.cursor()
-    cursor.execute('DROP TABLE IF EXISTS ' + db_name)
-    connection.commit()
-    connection.close()
+import database
 
 
 def test(db_filename):
@@ -42,7 +34,7 @@ def test(db_filename):
 
 if __name__ == '__main__':
     db_filename = '../databases/shoppingListDb'
-    delete_table(db_filename, 'ingredients')
-    delete_table(db_filename, 'recipes')
-    delete_table(db_filename, 'recipes_ingredients')
+    database.delete_table(db_filename, 'ingredients')
+    database.delete_table(db_filename, 'recipes')
+    database.delete_table(db_filename, 'recipes_ingredients')
     test(db_filename)
