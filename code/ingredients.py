@@ -31,7 +31,7 @@ class Ingredients:
         )
 
     def set_measurement_unit(self, ingredient_id, measurement_unit):
-        self.database.execute('UPDATE ingredients SET measurement_unit = ? WHERE id = ?',
+        self.database.execute('UPDATE ingredients SET meas_unit = ? WHERE id = ?',
                               (measurement_unit, ingredient_id))
 
     def set_name(self, ingredient_id, name):
