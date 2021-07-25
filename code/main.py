@@ -12,7 +12,7 @@ def test(db_filename):
     ingredientsDb.add_ingredient('potato', 'kg')
     ingredientsDb.add_ingredient('milk', 'l')
     ingredientsDb.add_ingredient('banana', 'pieces')
-    recipesDb.add_recipe('carrot_stuff')
+    recipesDb.add_recipe('carrot_stuff', 'just cut and bake')
     recipesDb.add_recipe('miklshake')
 
     rec_carrot_stuff = recipesDb.get_recipe_by_name('carrot_stuff')
