@@ -40,7 +40,8 @@ class RecipesIngredients:
             (recipe_id, ingredient_id)
         )
         if res is None:
-            return None
+            raise Exception("No recipe ID " + str(recipe_id) + " and ingredient ID " + str(ingredient_id) +
+                            " pair in the database!")
 
         return RecipeIngredientData(res[0], res[1], res[2])
 
