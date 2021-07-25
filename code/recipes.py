@@ -37,7 +37,7 @@ class Recipes:
 
     def get_recipe_by_id(self, recipe_id):
         res = self.database.execute_and_fetch_one(
-            'SELECT id, name, text FROM recipe WHERE id = ?',
+            'SELECT id, name, text FROM recipes WHERE id = ?',
             (recipe_id,)
         )
         return Recipe(res[0], res[1], res[2])

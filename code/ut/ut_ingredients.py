@@ -1,6 +1,5 @@
 import ingredients
 from ut_base import Ut
-import database
 
 
 class UtIngredients(Ut):
