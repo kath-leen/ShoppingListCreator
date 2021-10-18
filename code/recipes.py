@@ -49,5 +49,9 @@ class Recipes:
         )
         return Recipe(res[0], res[1], res[2])
 
+    def get_all_ids(self):
+        res = self.database.execute_and_fetch('SELECT id FROM recipes')
+        return [row[0] for row in res]
+
     def delete_recipe(self, recipe_id):
         self.database.execute('DELETE FROM recipes WHERE id = ?', (recipe_id,))

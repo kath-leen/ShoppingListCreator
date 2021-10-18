@@ -43,7 +43,6 @@ class UtIngredients(Ut):
         self.check_throws(self.ingredients.get_ingredient_by_id, self.id)
 
     def check(self):
-        self.add_ingr()
         self.check_add_ingredient()
         self.check_set_measurement_unit()
         self.check_set_name()

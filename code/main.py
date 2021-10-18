@@ -2,6 +2,7 @@ import ingredients
 import recipes
 import recipes_ingredients
 import database
+import logic
 
 
 def test(db_filename):
@@ -26,11 +27,16 @@ def test(db_filename):
     recIngDb = recipes_ingredients.RecipesIngredients(db_filename)
     recIngDb.add_recipe_ingredient(rec_carrot_stuff.recipe_id, ing_carrot.ingredient_id, 0.3)
     recIngDb.add_recipe_ingredient(rec_carrot_stuff.recipe_id, ing_potato.ingredient_id, 0.2)
+    recIngDb.add_recipe_ingredient(rec_carrot_stuff.recipe_id, ing_milk.ingredient_id, 0.5)
     recIngDb.add_recipe_ingredient(rec_milkshake.recipe_id, ing_milk.ingredient_id, 1)
     recIngDb.add_recipe_ingredient(rec_milkshake.recipe_id, ing_banana.ingredient_id, 2)
 
     print(recIngDb.get_recipe_ingredients(rec_carrot_stuff.recipe_id))
     print(recIngDb.get_recipe_ingredients(rec_milkshake.recipe_id))
+
+    desired_recipes = logic.chooseRecipes(recipesDb)
+    print(desired_recipes)
+    logic.printAllSummarizedIngredients(logic.summarizeAllIngredients(desired_recipes, recIngDb), ingredientsDb)
 
 if __name__ == '__main__':
     db_filename = '../databases/shoppingListDb'

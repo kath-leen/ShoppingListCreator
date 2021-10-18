@@ -42,9 +42,15 @@ class UtRecipes(Ut):
         self.delete_recipe()
         self.check_throws(self.recipes.get_recipe_by_id, self.id)
 
+    def check_get_all_ids(self):
+        ids = self.recipes.get_all_ids()
+        print(ids)
+        self.check_equal(len(ids), 1)
+        self.check_equal(ids[0], self.id)
+
     def check(self):
-        self.add_recipe()
         self.check_add_recipe()
         self.check_set_text()
         self.check_set_name()
+        self.check_get_all_ids()
         self.check_delete_recipe()
