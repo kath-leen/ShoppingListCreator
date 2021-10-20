@@ -34,9 +34,9 @@ def test(db_filename):
     print(recIngDb.get_recipe_ingredients(rec_carrot_stuff.recipe_id))
     print(recIngDb.get_recipe_ingredients(rec_milkshake.recipe_id))
 
-    desired_recipes = logic.chooseRecipes(recipesDb)
+    desired_recipes = logic.choose_recipes(recipesDb)
     print(desired_recipes)
-    logic.printAllSummarizedIngredients(logic.summarizeAllIngredients(desired_recipes, recIngDb), ingredientsDb)
+    logic.print_all_summarized_ingredients(logic.summarize_all_ingredients(desired_recipes, recIngDb), ingredientsDb)
 
 if __name__ == '__main__':
     db_filename = '../databases/shoppingListDb'
