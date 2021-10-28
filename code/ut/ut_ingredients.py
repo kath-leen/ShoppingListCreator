@@ -8,6 +8,7 @@ class UtIngredients(Ut):
         self.ingr_name = 'potato'
         self.ingr_measure_unit = 'kg'
         self.id = 0
+        self.non_existed_ingr_name = 'unknown ingredient'
 
     def add_ingr(self):
         self.ingredients.add_ingredient(self.ingr_name, self.ingr_measure_unit)
@@ -42,8 +43,13 @@ class UtIngredients(Ut):
         self.delete_ingr()
         self.check_throws(self.ingredients.get_ingredient_by_id, self.id)
 
+    def check_ingredient_exists(self):
+        self.check_true(self.ingredients.ingredient_exists(self.ingr_name))
+        self.check_false(self.ingredients.ingredient_exists(self.non_existed_ingr_name))
+
     def check(self):
         self.check_add_ingredient()
         self.check_set_measurement_unit()
         self.check_set_name()
+        self.check_ingredient_exists()
         self.check_delete_ingredient()

@@ -56,6 +56,17 @@ class RecipesIngredients:
         )
         return [RecipeIngredientData(row[0], row[1], row[2]) for row in res]
 
+    def is_ingredient_used_anywhere(self, ingredient_id):
+        res = self.database.execute_and_fetch(
+            'SELECT recipe_id '
+            'FROM recipes_ingredients '
+            'JOIN recipes '
+            '    ON recipes.id = recipes_ingredients.recipe_id '
+            'WHERE ingredient_id = ?',
+            (ingredient_id,)
+        )
+        return len(res) != 0
+
     def set_quantity(self, recipe_id, ingredient_id, quantity):
         self.database.execute(
             'UPDATE recipes_ingredients SET quantity = ? WHERE (recipe_id, ingredient_id) = (?, ?)',

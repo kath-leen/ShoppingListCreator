@@ -49,6 +49,13 @@ class Recipes:
         )
         return Recipe(res[0], res[1], res[2])
 
+    def recipe_exists(self, name):
+        res = self.database.execute_and_fetch_one(
+            'SELECT id, name, text FROM recipes WHERE name = ?',
+            (name,)
+        )
+        return res is not None
+
     def get_all_ids(self):
         res = self.database.execute_and_fetch('SELECT id FROM recipes')
         return [row[0] for row in res]

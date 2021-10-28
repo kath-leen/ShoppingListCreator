@@ -4,9 +4,9 @@ import recipes_ingredients
 import database
 import logic
 
+isTest = False
 
 def test(db_filename):
-
     recipesDb = recipes.Recipes(db_filename)
     ingredientsDb = ingredients.Ingredients(db_filename)
     ingredientsDb.add_ingredient('carrot', 'kg')
@@ -34,13 +34,55 @@ def test(db_filename):
     print(recIngDb.get_recipe_ingredients(rec_carrot_stuff.recipe_id))
     print(recIngDb.get_recipe_ingredients(rec_milkshake.recipe_id))
 
+    # logic.add_recipe(db_filename)
+
     desired_recipes = logic.choose_recipes(recipesDb)
     print(desired_recipes)
     logic.print_all_summarized_ingredients(logic.summarize_all_ingredients(desired_recipes, recIngDb), ingredientsDb)
 
-if __name__ == '__main__':
-    db_filename = '../databases/shoppingListDb'
+    logic.delete_recipe(db_filename)
+    logic.print_all_recipes(recipesDb)
+    logic.print_all_ingredients(ingredientsDb)
+
+
+def run_test():
+    db_filename = '../databases/shoppingListDbTest'
     database.delete_table(db_filename, 'ingredients')
     database.delete_table(db_filename, 'recipes')
     database.delete_table(db_filename, 'recipes_ingredients')
     test(db_filename)
+
+
+def run_real():
+    db_filename = '../databases/shoppingListDb'
+    recipes_db = recipes.Recipes(db_filename)
+    ingredients_db = ingredients.Ingredients(db_filename)
+    recipes_ingredients_db = recipes_ingredients.RecipesIngredients(db_filename)
+
+    print('Current database content is: ')
+    logic.print_all_recipes(recipes_db)
+    logic.print_all_ingredients(ingredients_db)
+
+    answer = input('\nDo you want to remove some recipe? (enter y or n) ')
+    while answer == 'y':
+        logic.delete_recipe(db_filename)
+        answer = input('Do you want to remove another recipe? (enter y or n) ')
+
+    answer = input('\nDo you want to add a new recipe? (enter y or n) ')
+    while answer == 'y':
+        logic.add_recipe(db_filename)
+        answer = input('Do you want to add another recipe? (enter y or n) ')
+
+    print('\n')
+    desired_recipes = logic.choose_recipes(recipes_db)
+
+    print('\n')
+    logic.print_all_summarized_ingredients(logic.summarize_all_ingredients(desired_recipes, recipes_ingredients_db),
+                                           ingredients_db)
+
+
+if __name__ == '__main__':
+    if isTest:
+        run_test()
+    else:
+        run_real()

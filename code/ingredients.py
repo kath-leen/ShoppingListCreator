@@ -51,5 +51,16 @@ class Ingredients:
         )
         return Ingredient(res[0], res[1], res[2])
 
+    def ingredient_exists(self, name):
+        res = self.database.execute_and_fetch_one(
+            'SELECT id, name, meas_unit FROM ingredients WHERE name = ?',
+            (name,)
+        )
+        return res is not None
+
+    def get_all_ids(self):
+        res = self.database.execute_and_fetch('SELECT id FROM ingredients')
+        return [row[0] for row in res]
+
     def delete_ingredient(self, ingredient_id):
         self.database.execute('DELETE FROM ingredients WHERE id = ?', (ingredient_id,))

@@ -8,6 +8,7 @@ class UtRecipes(Ut):
         self.recipe_name = 'boiled potato'
         self.recipe_text = 'brush potato and boil for 20-30 minutes'
         self.id = 0
+        self.non_existed_recipe_name = 'unknown recipe'
 
     def add_recipe(self):
         self.recipes.add_recipe(self.recipe_name, self.recipe_text)
@@ -48,9 +49,14 @@ class UtRecipes(Ut):
         self.check_equal(len(ids), 1)
         self.check_equal(ids[0], self.id)
 
+    def check_recipe_exists(self):
+        self.check_true(self.recipes.recipe_exists(self.recipe_name))
+        self.check_false(self.recipes.recipe_exists(self.non_existed_recipe_name))
+
     def check(self):
         self.check_add_recipe()
         self.check_set_text()
         self.check_set_name()
         self.check_get_all_ids()
+        self.check_recipe_exists()
         self.check_delete_recipe()

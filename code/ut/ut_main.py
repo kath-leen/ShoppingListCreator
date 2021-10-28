@@ -25,7 +25,7 @@ def test_logic(db_filename):
 
 
 if __name__ == '__main__':
-    db_filename = '../../databases/shoppingListDb'
+    db_filename = '../../databases/shoppingListDbTest'
     database.delete_table(db_filename, 'ingredients')
     database.delete_table(db_filename, 'recipes')
     database.delete_table(db_filename, 'recipes_ingredients')
