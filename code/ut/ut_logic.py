@@ -60,6 +60,5 @@ class UtLogic(Ut):
             ingredient_name = self.ingredients.get_ingredient_by_id(ingredient_id).name
             self.check_equal(ingredients_summary_data[ingredient_id], self.ingredient_sum_quantity[ingredient_name])
 
-
     def check(self):
         self.check_summarize_all_ingredients()

@@ -87,6 +87,7 @@ def choose_recipes(recipes_database):
     desired_recipes_by_id = desired_recipes_by_id_str.split(',')
     return desired_recipes_by_id
 
+
 def summarize_all_ingredients(desired_recipes_by_id, recipes_ingredients_database):
     ingredients_summary_data = {}
     for recipe_id in desired_recipes_by_id:
@@ -95,6 +96,7 @@ def summarize_all_ingredients(desired_recipes_by_id, recipes_ingredients_databas
             ingredients_summary_data[recipe_ingredient_data.ingredient_id] = \
                 ingredients_summary_data.get(recipe_ingredient_data.ingredient_id, 0) + recipe_ingredient_data.quantity
     return ingredients_summary_data
+
 
 def print_all_summarized_ingredients(ingredients_summary_data, ingredients_database):
     print('All ingredients you need:')
