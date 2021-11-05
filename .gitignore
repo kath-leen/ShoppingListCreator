@@ -1,4 +1,5 @@
 .idea/
 databases/
+csv/
 code/__pycache__/
 code/ut/__pycache__/
