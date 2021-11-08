@@ -10,16 +10,16 @@ class UtRecipes(Ut):
         self.id = 0
         self.non_existed_recipe_name = 'unknown recipe'
 
-    def add_recipe(self):
+    def __add_recipe(self):
         self.recipes.add_recipe(self.recipe_name, self.recipe_text)
         rec = self.recipes.get_recipe_by_name(self.recipe_name)
         self.id = rec.recipe_id
 
-    def delete_recipe(self):
+    def __delete_recipe(self):
         self.recipes.delete_recipe(self.id)
 
     def check_add_recipe(self):
-        self.add_recipe()
+        self.__add_recipe()
         rec = self.recipes.get_recipe_by_id(self.id)
         self.check_equal(self.recipe_name, rec.name)
         self.check_equal(self.recipe_text, rec.text)
@@ -40,7 +40,7 @@ class UtRecipes(Ut):
 
     def check_delete_recipe(self):
         self.check_not_throws(self.recipes.get_recipe_by_id, self.id)
-        self.delete_recipe()
+        self.__delete_recipe()
         self.check_throws(self.recipes.get_recipe_by_id, self.id)
 
     def check_get_all_ids(self):

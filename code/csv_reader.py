@@ -15,11 +15,12 @@ class RecipeIngredientCsvData:
 
 
 class CsvReader:
-    def __init__(self, db_filename, file_name_without_extension):
+    def __init__(self, db_filename, file_name_without_extension, path='../csv'):
         self.ingredients_db = ingredients.Ingredients(db_filename)
         self.recipes_db = recipes.Recipes(db_filename)
         self.recipes_ingredients_db = recipes_ingredients.RecipesIngredients(db_filename)
         self.file_name_without_extension = file_name_without_extension
+        self.path = path
         self.recipe_name = ''
         self.recipe_list = []
 
@@ -76,13 +77,15 @@ class CsvReader:
 
     def __add_the_recipe_to_databases(self):
         self.recipes_db.add_recipe(self.recipe_name)
+        recipe_data = self.recipes_db.get_recipe_by_name(self.recipe_name)
         for ingr_data in self.recipe_list:
             print('DBG: From the list: Ingredient name: ' + ingr_data.ingredient_name + ', ingredient quantity: ' +
                   str(ingr_data.quantity) + ', measure unit: ' + ingr_data.ingredient_measure_unit+ ', to add: ' +
                   str(ingr_data.to_add_new_ingredient))
             if ingr_data.to_add_new_ingredient:
                 self.ingredients_db.add_ingredient(ingr_data.ingredient_name, ingr_data.ingredient_measure_unit)
-            self.recipes_ingredients_db.add_recipe_ingredient(self.recipe_name, ingr_data.ingredient_name,
+            ingredient_data = self.ingredients_db.get_ingredient_by_name(ingr_data.ingredient_name)
+            self.recipes_ingredients_db.add_recipe_ingredient(recipe_data.recipe_id, ingredient_data.ingredient_id,
                                                               ingr_data.quantity)
 
     def read_csv_and_add_to_database(self):
@@ -91,7 +94,7 @@ class CsvReader:
         except Exception:
             return False
 
-        with open('../csv/' + self.file_name_without_extension + '.csv', newline='') as csv_file:
+        with open(self.path + self.file_name_without_extension + '.csv', newline='') as csv_file:
             csv_reader = csv.reader(csv_file)
             try:
                 for row in csv_reader:

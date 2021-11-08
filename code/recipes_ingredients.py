@@ -42,7 +42,6 @@ class RecipesIngredients:
         if res is None:
             raise Exception("No recipe ID " + str(recipe_id) + " and ingredient ID " + str(ingredient_id) +
                             " pair in the database!")
-
         return RecipeIngredientData(res[0], res[1], res[2])
 
     def get_recipe_ingredients(self, recipe_id):

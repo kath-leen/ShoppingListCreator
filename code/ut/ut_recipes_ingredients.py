@@ -20,32 +20,36 @@ class UtRecipesIngredients(Ut):
         self.check_equal(len(self.ingredient_names), len(self.ingredients_ids))
         self.check_equal(len(self.ingredient_names), len(self.ingredients_quantities))
 
-    def add_recipe(self):
+    def __add_recipe(self):
         self.recipes.add_recipe(self.recipe_name, self.recipe_text)
         rec = self.recipes.get_recipe_by_name(self.recipe_name)
         self.recipe_id = rec.recipe_id
 
-    def add_all_ingredients(self):
+    def __add_all_ingredients(self):
         for i in range(len(self.ingredient_names)):
             self.ingredients.add_ingredient(self.ingredient_names[i], self.meas_units[i])
             ingr = self.ingredients.get_ingredient_by_name(self.ingredient_names[i])
             self.ingredients_ids[i] = ingr.ingredient_id
 
-    def add_rec_ingr(self, index):
+    def __add_rec_ingr(self, index):
         self.check_true(index < len(self.ingredient_names))
         self.recipies_ingredients.add_recipe_ingredient(self.recipe_id, self.ingredients_ids[index],
                                                         self.ingredients_quantities[index])
 
-    def delete_ingr_from_rec(self, index):
+    def __delete_ingr_from_rec(self, index):
         self.check_true(index < len(self.ingredient_names))
         self.recipies_ingredients.delete_ingredient_from_recipe(self.recipe_id, self.ingredients_ids[index])
 
-    def delete_rec(self):
+    def __delete_rec(self):
         self.recipies_ingredients.delete_recipe(self.recipe_id)
 
     def check_add_rec_ingr(self):
         for i in range(len(self.ingredients_ids)):
-            self.add_rec_ingr(i)
+            self.check_throws(self.recipies_ingredients.get_recipe_ingredient, self.recipe_id, self.ingredients_ids[i])
+            self.__add_rec_ingr(i)
+            self.check_not_throws(self.recipies_ingredients.get_recipe_ingredient, self.recipe_id,
+                                  self.ingredients_ids[i])
+
             rec_ingr = self.recipies_ingredients.get_recipe_ingredient(self.recipe_id, self.ingredients_ids[i])
             self.check_equal(rec_ingr.recipe_id, self.recipe_id)
             self.check_equal(rec_ingr.ingredient_id, self.ingredients_ids[i])
@@ -71,12 +75,12 @@ class UtRecipesIngredients(Ut):
         for i in range(len(self.ingredients_ids)):
             self.check_not_throws(self.recipies_ingredients.get_recipe_ingredient, self.recipe_id,
                                   self.ingredients_ids[i])
-            self.delete_ingr_from_rec(i)
+            self.__delete_ingr_from_rec(i)
             self.check_throws(self.recipies_ingredients.get_recipe_ingredient, self.recipe_id, self.ingredients_ids[i])
 
     def check_delete_rec(self):
         self.check_not_throws(self.recipies_ingredients.get_recipe_ingredients, self.recipe_id)
-        self.delete_rec()
+        self.__delete_rec()
         self.check_throws(self.recipies_ingredients.get_recipe_ingredient, self.recipe_id)
 
     def check_is_ingredient_used_anywhere(self):
@@ -84,8 +88,8 @@ class UtRecipesIngredients(Ut):
         self.check_false(self.recipies_ingredients.is_ingredient_used_anywhere(self.unused_ingredient_id))
 
     def check(self):
-        self.add_recipe()
-        self.add_all_ingredients()
+        self.__add_recipe()
+        self.__add_all_ingredients()
         self.check_add_rec_ingr()
         self.check_get_recipe_ingredients()
         self.check_set_quantity()

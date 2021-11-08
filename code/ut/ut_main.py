@@ -2,6 +2,7 @@ from ut_ingredients import UtIngredients
 from ut_recipes import UtRecipes
 from ut_recipes_ingredients import UtRecipesIngredients
 from ut_logic import UtLogic
+from ut_csv_reader import UtCsvReader
 import database
 
 
@@ -23,6 +24,10 @@ def test_logic(db_filename):
     ut_logic = UtLogic(db_filename)
     ut_logic.check()
 
+def test_csv_reader(db_filename):
+    ut_csv_reader = UtCsvReader(db_filename)
+    ut_csv_reader.check()
+
 
 if __name__ == '__main__':
     db_filename = '../../databases/shoppingListDbTest'
@@ -33,3 +38,4 @@ if __name__ == '__main__':
     test_recipes(db_filename)
     test_recipes_ingredients(db_filename)
     test_logic(db_filename)
+    test_csv_reader(db_filename)

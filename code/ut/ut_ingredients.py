@@ -10,16 +10,16 @@ class UtIngredients(Ut):
         self.id = 0
         self.non_existed_ingr_name = 'unknown ingredient'
 
-    def add_ingr(self):
+    def __add_ingr(self):
         self.ingredients.add_ingredient(self.ingr_name, self.ingr_measure_unit)
         ingr = self.ingredients.get_ingredient_by_name(self.ingr_name)
         self.id = ingr.ingredient_id
 
-    def delete_ingr(self):
+    def __delete_ingr(self):
         self.ingredients.delete_ingredient(self.id)
 
     def check_add_ingredient(self):
-        self.add_ingr()
+        self.__add_ingr()
         ingr = self.ingredients.get_ingredient_by_id(self.id)
         self.check_equal(self.ingr_name, ingr.name)
         self.check_equal(self.ingr_measure_unit, ingr.meas_unit)
@@ -40,7 +40,7 @@ class UtIngredients(Ut):
 
     def check_delete_ingredient(self):
         self.check_not_throws(self.ingredients.get_ingredient_by_id, self.id)
-        self.delete_ingr()
+        self.__delete_ingr()
         self.check_throws(self.ingredients.get_ingredient_by_id, self.id)
 
     def check_ingredient_exists(self):
