@@ -94,7 +94,7 @@ class CsvReader:
         except Exception:
             return False
 
-        with open(self.path + self.file_name_without_extension + '.csv', newline='') as csv_file:
+        with open(self.path + '/' + self.file_name_without_extension + '.csv', newline='') as csv_file:
             csv_reader = csv.reader(csv_file)
             try:
                 for row in csv_reader:
@@ -104,13 +104,3 @@ class CsvReader:
             self.__add_the_recipe_to_databases()
 
         return True
-
-
-if __name__ == '__main__':
-    db_filename = '../databases/shoppingListDbTest'
-    database.delete_table(db_filename, 'ingredients')
-    database.delete_table(db_filename, 'recipes')
-    database.delete_table(db_filename, 'recipes_ingredients')
-
-    csv_reader = CsvReader(db_filename, 'test')
-    csv_reader.read_csv_and_add_to_database()

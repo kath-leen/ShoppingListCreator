@@ -3,6 +3,7 @@ import recipes
 import recipes_ingredients
 import database
 import logic
+import csv_reader
 
 
 isTest = False
@@ -70,10 +71,18 @@ def run_real():
         logic.delete_recipe(db_filename)
         answer = input('Do you want to remove another recipe? (enter y or n) ')
 
-    answer = input('\nDo you want to add a new recipe? (enter y or n) ')
-    while answer == 'y':
-        logic.add_recipe(db_filename)
-        answer = input('Do you want to add another recipe? (enter y or n) ')
+    answer_manual = input('\nDo you want to add a new recipe manually? (enter y or n) ')
+    if answer_manual == 'n':
+        answer_csv = input('\nDo you want to add a new recipe from CSV file? (enter y or n) ')
+        while answer_csv == 'y':
+            csv_file_name = input('Enter file name WITHOUT csv extesion (assuming the file in under ..\csv location): ')
+            new_csv_reader = csv_reader.CsvReader(db_filename, csv_file_name)
+            new_csv_reader.read_csv_and_add_to_database()
+            answer_csv = input('\nDo you want to add another recipe? (enter y or n) ')
+    else:
+        while answer_manual == 'y':
+            logic.add_recipe(db_filename)
+            answer_manual = input('\nDo you want to add another recipe? (enter y or n) ')
 
     print('\n')
     desired_recipes = logic.choose_recipes(recipes_db)

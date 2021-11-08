@@ -19,7 +19,7 @@ class UtCsvReader(Ut):
                                              RecipeIngredientCsvUtData('carrot', 0.3, 'kilograms')]
         self.ut_file_name_without_extension = 'recipe_ut_csv'
         self.path = '../../csv'
-        self.ut_file_full_name = self.path + self.ut_file_name_without_extension + '.csv'
+        self.ut_file_full_name = self.path + '/' + self.ut_file_name_without_extension + '.csv'
 
         if os.path.exists(self.ut_file_full_name):
             os.remove(self.ut_file_full_name)
