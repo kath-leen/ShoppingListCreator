@@ -4,6 +4,7 @@ import recipes_ingredients
 import database
 import logic
 import csv_reader
+import command_options_parser
 
 
 isTest = False
@@ -68,7 +69,7 @@ def run_real():
 
     answer = input('\nDo you want to remove some recipe? (enter y or n) ')
     while answer == 'y':
-        logic.delete_recipe(db_filename)
+        logic.delete_recipe_with_interface(db_filename)
         answer = input('Do you want to remove another recipe? (enter y or n) ')
 
     answer_manual = input('\nDo you want to add a new recipe manually? (enter y or n) ')
@@ -92,8 +93,19 @@ def run_real():
                                            ingredients_db)
 
 
+def run_real_with_command_options():
+    db_filename = '../databases/shoppingListDb'
+    cmd_options_parser = command_options_parser.CommandOptionsParser(db_filename)
+    print('Starting the program. Possible options are:')
+    cmd_options_parser.print_options()
+    while True:
+        option = input('\n')
+        cmd_options_parser.handle_option(option)
+
+
 if __name__ == '__main__':
     if isTest:
         run_test()
     else:
-        run_real()
+        #run_real()
+        run_real_with_command_options()

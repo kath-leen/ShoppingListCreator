@@ -4,8 +4,6 @@ import ingredients
 import recipes
 import recipes_ingredients
 
-import database # TODO: remove when not needed!
-
 @dataclass
 class RecipeIngredientCsvData:
     ingredient_name: int

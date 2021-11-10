@@ -68,16 +68,18 @@ def add_recipe(db_filename):
         recipes_ingredients_db.add_recipe_ingredient(recipe.recipe_id, ingredient.ingredient_id, quantity)
 
 
-def delete_recipe(db_filename):
+def delete_recipe_with_interface(db_filename):
     recipes_db = recipes.Recipes(db_filename)
-    ingredients_db = ingredients.Ingredients(db_filename)
     recipes_ingredients_db = recipes_ingredients.RecipesIngredients(db_filename)
 
     print_all_recipes(recipes_db)
     recipe_id = input('Enter recipe ID that you wish to delete ')
+    delete_recipe(recipes_db, recipes_ingredients_db, recipe_id)
+
+
+def delete_recipe(recipes_db, recipes_ingredients_db, recipe_id):
     recipes_db.delete_recipe(recipe_id)
     recipes_ingredients_db.delete_recipe(recipe_id)
-    delete_all_unused_ingredients(ingredients_db, recipes_ingredients_db)
 
 
 def choose_recipes(recipes_database):
