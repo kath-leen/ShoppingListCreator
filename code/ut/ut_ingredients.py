@@ -10,6 +10,10 @@ class UtIngredients(Ut):
         self.id = 0
         self.non_existed_ingr_name = 'unknown ingredient'
 
+    def __del__(self):
+        if self.ingredients.ingredient_exists(self.ingr_name):
+            self.ingredients.delete_ingredient(self.id)
+
     def __add_ingr(self):
         self.ingredients.add_ingredient(self.ingr_name, self.ingr_measure_unit)
         ingr = self.ingredients.get_ingredient_by_name(self.ingr_name)

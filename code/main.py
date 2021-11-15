@@ -3,7 +3,6 @@ import recipes
 import recipes_ingredients
 import database
 import logic
-import csv_reader
 import command_options_parser
 
 
@@ -11,6 +10,7 @@ isTest = False
 
 
 def test(db_filename):
+    db_logic = logic.DatabaseLogic(db_filename)
     recipes_db = recipes.Recipes(db_filename)
     ingredients_db = ingredients.Ingredients(db_filename)
     ingredients_db.add_ingredient('carrot', 'kg')
@@ -38,15 +38,19 @@ def test(db_filename):
     print(rec_ing_db.get_recipe_ingredients(rec_carrot_stuff.recipe_id))
     print(rec_ing_db.get_recipe_ingredients(rec_milkshake.recipe_id))
 
-    # logic.add_recipe(db_filename)
+    # db_logic.add_recipe()
 
-    desired_recipes = logic.choose_recipes(recipes_db)
+    desired_recipes = db_logic.choose_recipes()
     print(desired_recipes)
-    logic.print_all_summarized_ingredients(logic.summarize_all_ingredients(desired_recipes, rec_ing_db), ingredients_db)
+    db_logic.summarize_and_print_all_ingredients(desired_recipes)
 
-    logic.delete_recipe(db_filename)
-    logic.print_all_recipes(recipes_db)
-    logic.print_all_ingredients(ingredients_db)
+    db_logic.delete_recipe_manually()
+    db_logic.print_all_recipes()
+    db_logic.print_all_ingredients()
+
+    print('\nNow all the unused ingredients will be removed')
+    db_logic.delete_all_unused_ingredients()
+    db_logic.print_all_ingredients()
 
 
 def run_test():
@@ -58,42 +62,6 @@ def run_test():
 
 
 def run_real():
-    db_filename = '../databases/shoppingListDb'
-    recipes_db = recipes.Recipes(db_filename)
-    ingredients_db = ingredients.Ingredients(db_filename)
-    recipes_ingredients_db = recipes_ingredients.RecipesIngredients(db_filename)
-
-    print('Current database content is: ')
-    logic.print_all_recipes(recipes_db)
-    logic.print_all_ingredients(ingredients_db)
-
-    answer = input('\nDo you want to remove some recipe? (enter y or n) ')
-    while answer == 'y':
-        logic.delete_recipe_with_interface(db_filename)
-        answer = input('Do you want to remove another recipe? (enter y or n) ')
-
-    answer_manual = input('\nDo you want to add a new recipe manually? (enter y or n) ')
-    if answer_manual == 'n':
-        answer_csv = input('\nDo you want to add a new recipe from CSV file? (enter y or n) ')
-        while answer_csv == 'y':
-            csv_file_name = input('Enter file name WITHOUT csv extesion (assuming the file in under ..\csv location): ')
-            new_csv_reader = csv_reader.CsvReader(db_filename, csv_file_name)
-            new_csv_reader.read_csv_and_add_to_database()
-            answer_csv = input('\nDo you want to add another recipe? (enter y or n) ')
-    else:
-        while answer_manual == 'y':
-            logic.add_recipe(db_filename)
-            answer_manual = input('\nDo you want to add another recipe? (enter y or n) ')
-
-    print('\n')
-    desired_recipes = logic.choose_recipes(recipes_db)
-
-    print('\n')
-    logic.print_all_summarized_ingredients(logic.summarize_all_ingredients(desired_recipes, recipes_ingredients_db),
-                                           ingredients_db)
-
-
-def run_real_with_command_options():
     db_filename = '../databases/shoppingListDb'
     cmd_options_parser = command_options_parser.CommandOptionsParser(db_filename)
     print('Starting the program. Possible options are:')
@@ -107,5 +75,4 @@ if __name__ == '__main__':
     if isTest:
         run_test()
     else:
-        #run_real()
-        run_real_with_command_options()
+        run_real()

@@ -11,6 +11,7 @@ class CommandOptionsParser:
         self.ingredients_db = ingredients.Ingredients(db_filename)
         self.recipes_db = recipes.Recipes(db_filename)
         self.recipes_ingredients_db = recipes_ingredients.RecipesIngredients(db_filename)
+        self.db_logic = logic.DatabaseLogic(db_filename)
         self.option_handler_functions = {'-h': self.print_options,
                                          '-lr': self.__list_recipes,
                                          '-li': self.__list_ingredients,
@@ -34,29 +35,27 @@ class CommandOptionsParser:
         print('-q quit')
 
     def __list_recipes(self):
-        logic.print_all_recipes(self.recipes_db)
+        self.db_logic.print_all_recipes()
 
     def __list_ingredients(self):
-        logic.print_all_ingredients(self.ingredients_db)
+        self.db_logic.print_all_ingredients()
 
     def __delete_recipe(self, recipe_id):
-        logic.delete_recipe(self.recipes_db, self.recipes_ingredients_db, recipe_id)
+        self.db_logic.delete_recipe(recipe_id)
 
     def __clean_ingredients(self):
-        logic.delete_all_unused_ingredients(self.ingredients_db, self.recipes_ingredients_db)
+        self.db_logic.delete_all_unused_ingredients()
 
     def __add_recipe_manually(self):
-        logic.add_recipe(db_filename)
+        self.db_logic.add_recipe()
 
     def __add_recipe_via_csv(self, file_name, file_path = '../csv'):
         new_csv_reader = csv_reader.CsvReader(self.db_filename, file_name, file_path)
         new_csv_reader.read_csv_and_add_to_database()
 
     def __create_shopping_list(self, *recipe_ids):
-        logic.print_all_summarized_ingredients(logic.summarize_all_ingredients([int(recipe_id)
-                                                                                for recipe_id in recipe_ids],
-                                                                               self.recipes_ingredients_db),
-                                               self.ingredients_db)
+        self.db_logic.summarize_and_print_all_ingredients([int(recipe_id) for recipe_id in recipe_ids])
+
     @staticmethod
     def __quit():
         quit()

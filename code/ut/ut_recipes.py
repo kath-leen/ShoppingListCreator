@@ -10,6 +10,10 @@ class UtRecipes(Ut):
         self.id = 0
         self.non_existed_recipe_name = 'unknown recipe'
 
+    def __del__(self):
+        if self.recipes.recipe_exists(self.recipe_name):
+            self.recipes.delete_recipe(self.id)
+
     def __add_recipe(self):
         self.recipes.add_recipe(self.recipe_name, self.recipe_text)
         rec = self.recipes.get_recipe_by_name(self.recipe_name)

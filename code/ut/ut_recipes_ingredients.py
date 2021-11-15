@@ -20,6 +20,14 @@ class UtRecipesIngredients(Ut):
         self.check_equal(len(self.ingredient_names), len(self.ingredients_ids))
         self.check_equal(len(self.ingredient_names), len(self.ingredients_quantities))
 
+    def __del__(self):
+        self.recipies_ingredients.delete_recipe(self.recipe_id)
+        if self.recipes.recipe_exists(self.recipe_name):
+            self.recipes.delete_recipe(self.recipe_id)
+        for i in range(len(self.ingredient_names)):
+            if self.ingredients.ingredient_exists(self.ingredient_names[i]):
+                self.ingredients.delete_ingredient(self.ingredients_ids[i])
+
     def __add_recipe(self):
         self.recipes.add_recipe(self.recipe_name, self.recipe_text)
         rec = self.recipes.get_recipe_by_name(self.recipe_name)

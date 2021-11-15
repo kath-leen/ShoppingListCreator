@@ -13,6 +13,7 @@ class RecipeIngredientCsvUtData:
     quantity: float
     ingredient_measure_unit: int
 
+
 class UtCsvReader(Ut):
     def __init__(self, db_filename):
         self.recipe_ingredient_data_array = [RecipeIngredientCsvUtData('Potato', 0.5, 'grams'),
@@ -35,6 +36,18 @@ class UtCsvReader(Ut):
         if os.path.exists(self.ut_file_full_name):
             os.remove(self.ut_file_full_name)
 
+        recipe_name = self.ut_file_name_without_extension
+        if self.recipes.recipe_exists(recipe_name):
+            recipe_id = self.recipes.get_recipe_by_name(recipe_name).recipe_id
+            self.recipes_ingredients.delete_recipe(recipe_id)
+            self.recipes.delete_recipe(recipe_id)
+
+        for recipe_ingredient_data in self.recipe_ingredient_data_array:
+            if self.ingredients.ingredient_exists(recipe_ingredient_data.ingredient_name.lower()):
+                ingredient_id = \
+                    self.ingredients.get_ingredient_by_name(recipe_ingredient_data.ingredient_name.lower()).ingredient_id
+                self.ingredients.delete_ingredient(ingredient_id)
+
     def __create_csv_file(self):
         with open(self.ut_file_full_name, 'w') as csv_file:
             csv_writer = csv.writer(csv_file)
@@ -43,7 +56,7 @@ class UtCsvReader(Ut):
                                      str(csv_ut_data.quantity),
                                      csv_ut_data.ingredient_measure_unit])
 
-    def check_read_csv_and_add_to_database(self):
+    def __clean_databases(self):
         recipe_name = self.ut_file_name_without_extension
         self.recipes_ingredients.delete_recipe(recipe_name)
 
@@ -55,10 +68,14 @@ class UtCsvReader(Ut):
         for csv_ut_data in self.recipe_ingredient_data_array:
             ingredient_name = csv_ut_data.ingredient_name.lower()
             if self.ingredients.ingredient_exists(ingredient_name):
-                ingredient_data = self.ingredients.get_ingredient_by_name(cingredient_name)
+                ingredient_data = self.ingredients.get_ingredient_by_name(ingredient_name)
                 self.ingredients.delete_ingredient(ingredient_data.ingredient_id)
             self.check_false(self.ingredients.ingredient_exists(ingredient_name))
 
+    def check_read_csv_and_add_to_database(self):
+        recipe_name = self.ut_file_name_without_extension
+
+        self.__clean_databases()
         self.csv_reader.read_csv_and_add_to_database()
 
         self.check_true(self.recipes.recipe_exists(recipe_name))
@@ -75,13 +92,6 @@ class UtCsvReader(Ut):
             rec_ingr_data = self.recipes_ingredients.get_recipe_ingredient(recipe_data.recipe_id,
                                                                            ingredient_data.ingredient_id)
             self.check_equal(rec_ingr_data.quantity, csv_ut_data.quantity)
-
-        self.recipes_ingredients.delete_recipe(recipe_name)
-        self.recipes.delete_recipe(recipe_data.recipe_id)
-        for csv_ut_data in self.recipe_ingredient_data_array:
-            ingredient_name = csv_ut_data.ingredient_name.lower()
-            ingredient_data = self.ingredients.get_ingredient_by_name(ingredient_name)
-            self.ingredients.delete_ingredient(ingredient_data.ingredient_id)
 
     def check(self):
         # print 'y' when the program asks you to do so

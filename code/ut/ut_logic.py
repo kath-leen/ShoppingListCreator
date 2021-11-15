@@ -7,6 +7,7 @@ from ut_base import Ut
 
 class UtLogic(Ut):
     def __init__(self, db_filename):
+        self.db_logic = logic.DatabaseLogic(db_filename)
         self.recipes = recipes.Recipes(db_filename)
         self.ingredients = ingredients.Ingredients(db_filename)
         self.recipes_ingredients = recipes_ingredients.RecipesIngredients(db_filename)
@@ -23,6 +24,17 @@ class UtLogic(Ut):
         self.__add_all_recipes()
         self.__add_all_ingredients()
         self.__add_all_recipes_ingredients()
+
+    def __del__(self):
+        for recipe_data in self.recipes_data:
+            if self.recipes.recipe_exists(recipe_data.name):
+                recipe_id = self.recipes.get_recipe_by_name(recipe_data.name).recipe_id
+                self.recipes_ingredients.delete_recipe(recipe_id)
+                self.recipes.delete_recipe(recipe_id)
+        for ingredient_data in self.ingredients_data:
+            if self.ingredients.ingredient_exists(ingredient_data.name):
+                ingredient_id = self.ingredients.get_ingredient_by_name(ingredient_data.name).ingredient_id
+                self.ingredients.delete_ingredient(ingredient_id)
 
     def __add_all_recipes(self):
         for i in range(len(self.recipes_data)):
@@ -55,7 +67,7 @@ class UtLogic(Ut):
 
     def check_summarize_all_ingredients(self):
         desired_recipes_by_id = [rec.recipe_id for rec in self.recipes_data]
-        ingredients_summary_data = logic.summarize_all_ingredients(desired_recipes_by_id, self.recipes_ingredients)
+        ingredients_summary_data = self.db_logic.summarize_all_ingredients(desired_recipes_by_id)
         for ingredient_id in ingredients_summary_data.keys():
             ingredient_name = self.ingredients.get_ingredient_by_id(ingredient_id).name
             self.check_equal(ingredients_summary_data[ingredient_id], self.ingredient_sum_quantity[ingredient_name])
