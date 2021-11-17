@@ -35,18 +35,7 @@ class UtCsvReader(Ut):
     def __del__(self):
         if os.path.exists(self.ut_file_full_name):
             os.remove(self.ut_file_full_name)
-
-        recipe_name = self.ut_file_name_without_extension
-        if self.recipes.recipe_exists(recipe_name):
-            recipe_id = self.recipes.get_recipe_by_name(recipe_name).recipe_id
-            self.recipes_ingredients.delete_recipe(recipe_id)
-            self.recipes.delete_recipe(recipe_id)
-
-        for recipe_ingredient_data in self.recipe_ingredient_data_array:
-            if self.ingredients.ingredient_exists(recipe_ingredient_data.ingredient_name.lower()):
-                ingredient_id = \
-                    self.ingredients.get_ingredient_by_name(recipe_ingredient_data.ingredient_name.lower()).ingredient_id
-                self.ingredients.delete_ingredient(ingredient_id)
+        self.__clean_databases()
 
     def __create_csv_file(self):
         with open(self.ut_file_full_name, 'w') as csv_file:
@@ -58,18 +47,18 @@ class UtCsvReader(Ut):
 
     def __clean_databases(self):
         recipe_name = self.ut_file_name_without_extension
-        self.recipes_ingredients.delete_recipe(recipe_name)
 
         if self.recipes.recipe_exists(recipe_name):
-            recipe_data = self.recipes.get_recipe_by_name(recipe_name)
-            self.recipes.delete_recipe(recipe_data.recipe_id)
+            recipe_id = self.recipes.get_recipe_by_name(recipe_name).recipe_id
+            self.recipes_ingredients.delete_recipe(recipe_id)
+            self.recipes.delete_recipe(recipe_id)
         self.check_false(self.recipes.recipe_exists(recipe_name))
 
         for csv_ut_data in self.recipe_ingredient_data_array:
             ingredient_name = csv_ut_data.ingredient_name.lower()
             if self.ingredients.ingredient_exists(ingredient_name):
-                ingredient_data = self.ingredients.get_ingredient_by_name(ingredient_name)
-                self.ingredients.delete_ingredient(ingredient_data.ingredient_id)
+                ingredient_id = self.ingredients.get_ingredient_by_name(ingredient_name).ingredient_id
+                self.ingredients.delete_ingredient(ingredient_id)
             self.check_false(self.ingredients.ingredient_exists(ingredient_name))
 
     def check_read_csv_and_add_to_database(self):
